@@ -63,7 +63,8 @@
 
 - hosts: "{{ groups['masters'][0] }}"
   gather_facts: false
-  include_tasks: nfsstorageclass.yml
+  tasks:
+  - include_tasks: nfsstorageclass.yml
   tags:
     - nfsstorageclass
    
