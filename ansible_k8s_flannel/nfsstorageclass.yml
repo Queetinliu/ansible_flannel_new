@@ -30,8 +30,10 @@
   with_items: "{{ groups['workers'] }}"  
   
 - name: copy nfs helm package
-  copy: 
-    src: files/nfs-subdir-external-provisioner-4.0.12.tgz
+  get_url:
+    url: "{{ httpurl }}/{{ ansible_role_name }}/nfs-subdir-external-provisioner-4.0.12.tgz"
+  #copy: 
+    #src: files/nfs-subdir-external-provisioner-4.0.12.tgz
     dest: /opt/nfs-subdir-external-provisioner-4.0.12.tgz
    
 - name: check if nfs-client sc exists
