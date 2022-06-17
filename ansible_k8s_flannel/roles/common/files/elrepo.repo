@@ -24,7 +24,7 @@ name=ELRepo.org Community Enterprise Linux Kernel Repository - el7
 baseurl=http://mirrors.tuna.tsinghua.edu.cn/elrepo/kernel/el7/$basearch/
 #mirrorlist=http://mirrors.elrepo.org/mirrors-elrepo-kernel.el7
 enabled=0
-gpgcheck=1
+gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-elrepo.org
 protect=0
 
