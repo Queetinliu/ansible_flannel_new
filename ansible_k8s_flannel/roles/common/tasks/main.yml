@@ -25,7 +25,7 @@
 - name: update /etc/hosts file
   blockinfile:
     dest: /etc/hosts
-    content: "{{ lookup('template', 'templates/hosts2.j2') }}"
+    content: "{{ lookup('template', 'templates/hosts.j2') }}"
     state: present
   tags: modify hosts
 
