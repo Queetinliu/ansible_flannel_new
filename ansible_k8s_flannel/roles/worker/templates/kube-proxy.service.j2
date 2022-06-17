@@ -5,8 +5,8 @@ After=network.target
 
 [Service]
 WorkingDirectory={{ k8s_dir }}/kube-proxy
-ExecStart=/opt/k8s/kube-proxy/bin/kube-proxy \
-  --config=/opt/k8s/kube-proxy/cfg/kube-proxy-config.yaml \
+ExecStart={{ k8s_dir }}/kube-proxy/bin/kube-proxy \
+  --config={{ k8s_dir }}/kube-proxy/cfg/kube-proxy-config.yaml \
   --logtostderr=true \
   --v=2
 Restart=on-failure

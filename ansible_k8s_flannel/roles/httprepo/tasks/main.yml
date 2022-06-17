@@ -17,6 +17,7 @@
   template:
     src: templates/httplocal.repo.j2
     dest: /etc/yum.repos.d/httplocal.repo
+  when: internet.rc|default(1) != 0 
   notify:
     - clean cache
 

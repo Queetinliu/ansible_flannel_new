@@ -16,19 +16,25 @@
 ## 192.168.100.10
 #如果不是使用默认的ip绑定服务，请通过nodeip指定服务绑定的ip,请etcd集群使用的名字
 [all]
-k8smaster01 ansible_host=172.18.10.41 hostname=k8smaster01 etcd_member_name=etcd01 #nodeip=1.1.1.1
-k8snode01 ansible_host=172.18.10.175 hostname=k8snode01 #nodeip=1.1.1.1
+master01 ansible_host=192.168.56.30 hostname=master01 etcd_member_name=etcd01 #nodeip=1.1.1.1
+master02 ansible_host=192.168.56.31 hostname=master02 etcd_member_name=etcd02 #nodeip=1.1.1.1
+master03 ansible_host=192.168.56.32 hostname=master03 etcd_member_name=etcd03 #nodeip=1.1.1.1
 
 # Ex 2: A collection of hosts belonging to the 'webservers' group
 [masters]
-k8smaster01
+master01
+master02
+master03
 
 [etcd]
-k8smaster01
+master01
+master02
+master03
 
 [workers]
-k8smaster01
-k8snode01
+master01
+master02
+master03
 
 #[gpuservers]
 #master01

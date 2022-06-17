@@ -1,21 +1,21 @@
-- hosts: all
-  gather_facts: false
-  tasks:
-  - name: test if connect to internet
-    shell: ping -c 4 -q baidu.com >& /dev/null
-    ignore_errors: true
-    register: internet
-    tags:
-      - httprepo
-      - common
- 
-  - name: set internetstatus fact
-    set_fact:
-      internetrc: "{{ internet.rc }}"
-    tags:
-      - httprepo
-      - common
-
+#- hosts: all
+#  gather_facts: false
+#  tasks:
+#  - name: test if connect to internet
+#    shell: ping -c 4 -q baidu.com >& /dev/null
+#    ignore_errors: true
+#    register: internet
+#    tags:
+#      - httprepo
+#      - common
+# 
+#  - name: set internetstatus fact
+#    set_fact:
+#      internetrc: "{{ internet.rc }}"
+#    tags:
+#      - httprepo
+#      - common
+#
 - hosts: all
   gather_facts: false
   roles:

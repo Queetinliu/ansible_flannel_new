@@ -4,9 +4,15 @@
     name: kernel-tools-3.10.0
     state: absent
 
+- name: install elrepo
+  yum:
+    name: http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+    state: present
+
 - name: install new kernel
   yum:
-    name: kernel-lt-4.4.138
+    name: kernel-lt
+    enablerepo: elrepo-kernel
     state: present
   async: 900
   poll: 0 
@@ -66,7 +72,7 @@
   register: result
   until: result.finished
   delay: 5
-  retries: 30
+  retries: 50
 
 - name: install chrony
   yum:

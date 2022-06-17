@@ -1,3 +1,8 @@
+- include_tasks: "{{ item }}"
+  loop:
+    - setuphttpserver.yml
+    - checkinternet.yml 
+
 - name: install nfs-utils on all workers
   yum:
     name: nfs-utils
@@ -8,7 +13,7 @@
   delegate_to: "{{ item }}"
   with_items: "{{ groups['workers'] }}"  
 
-- include_tasks: setuphttpserver.yml
+#- include_tasks: setuphttpserver.yml
 
 - name: copy helm and nfs tar to first master host
   get_url: 

@@ -2,7 +2,7 @@ kind: KubeProxyConfiguration
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 clientConnection:
   burst: 200
-  kubeconfig: "/opt/k8s/kube-proxy/cfg/kube-proxy.kubeconfig"
+  kubeconfig: "{{ k8s_dir }}/kube-proxy/cfg/kube-proxy.kubeconfig"
   qps: 100
 bindAddress: {{ hostvars[inventory_hostname].ansible_host }}
 healthzBindAddress: {{ hostvars[inventory_hostname].ansible_host }}:10256

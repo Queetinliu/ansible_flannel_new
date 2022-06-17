@@ -8,7 +8,7 @@ https://{{ hostvars[item].nodeip|default(hostvars[item].ansible_host) }}:2379,
 https://{{ hostvars[item].nodeip|default(hostvars[item].ansible_host) }}:2379
 {%- endif -%}
 {% endfor %}'
-k8s_dir: /opt/k8s
+k8s_dir: /home/k8s
 token: 5774593de3382190223132e38d48a1e2
 cluster_dns_domain: cluster.local
 pvcconfig: true
@@ -36,7 +36,7 @@ etcd:
 {{ hostvars[item].etcd_member_name }}=https://{{ hostvars[item].nodeip|default(hostvars[item].ansible_host) }}:2380
 {%- endif -%}
 {% endfor %}'
-  etcd_workingdir: /opt/etcd
+  etcd_workingdir: /home/etcd
   servicename: etcd
 
 kube_apiserver:
@@ -85,7 +85,7 @@ docker:
 flannel:
   healthzPort: 8471
   type: vxlan
-  iface: enp0s8
+  iface: eno1
   hostname: "{{ hostname }}" 
   servicename: flanneld
 
@@ -107,6 +107,6 @@ cudaandfiles:
   driverrunfile: NVIDIA-Linux-x86_64-470.57.02.run
 
 nfssc:
-  nfsserver: 192.168.0.156
-  nfspath: /data
+  nfsserver: 172.18.10.2
+  nfspath: /DATADISK/data/bjsh
  

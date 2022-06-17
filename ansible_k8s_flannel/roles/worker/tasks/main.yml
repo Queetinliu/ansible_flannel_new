@@ -1,8 +1,13 @@
+- include_tasks: "{{ item }}"
+  loop:
+    - setuphttpserver.yml
+    - checkinternet.yml   
+
 - name: add docker-ce repo
   copy:
     src: files/docker-ce.repo
     dest: /etc/yum.repos.d/docker-ce.repo
-  when: internetrc|default(1) == 0
+  when: internetrc|default(1) == "0"
 
 - name: install docker-ce
   yum:
@@ -14,7 +19,7 @@
   notify:
     - restart docker
 
-- include_tasks: setuphttpserver.yml
+#- include_tasks: setuphttpserver.yml
 
 #- include_tasks: docker.yml
 
@@ -146,13 +151,13 @@
   yum:
     state: present
     name: ['epel-release','ipvsadm','conntrack-tools']
-  when: internetrc|default(1) == 0
+  when: internetrc|default(1) == "0"
 
 - name: install ipvs without internet
   yum:
     state: present
     name: ['ipvsadm','conntrack-tools']
-  when: internetrc|default(1) != 0
+  when: internetrc|default(1) != "0"
 
 - name: modprobe ipvs
   modprobe:
@@ -208,7 +213,7 @@
     args:
       chdir: "{{ k8s_dir }}/kubelet/bin/"
 
-  when: internetrc|default(1) != 0
+  when: internetrc|default(1) != "0"
 
 - name: generate flanneld service and other config
   template:
