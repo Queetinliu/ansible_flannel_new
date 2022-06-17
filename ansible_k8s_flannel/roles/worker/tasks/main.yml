@@ -147,10 +147,19 @@
     - { file: kubelet-config.yaml.j2, path: kubelet }
     - { file: kube-proxy-config.yaml.j2, path: kube-proxy }
 
+- name: copy epel repo
+  copy:
+    src: files/{{ item }}
+    dest: /etc/yum.repos.d/{{ item }}
+  when: internetrc|default(1) == "0"
+  loop:
+    - epel.repo
+    - epel-testing.repo
+
 - name: install ipvs with internet
   yum:
     state: present
-    name: ['epel-release','ipvsadm','conntrack-tools']
+    name: ['ipvsadm','conntrack-tools']
   when: internetrc|default(1) == "0"
 
 - name: install ipvs without internet

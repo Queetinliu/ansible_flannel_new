@@ -1,23 +1,25 @@
 - block:
+  - include_tasks: checkinternet.yml
+
   - name: Ansible delete file glob
     find:
       paths: /etc/yum.repos.d/
       patterns: '*.repo'
     register: files_to_delete
-    when: internetrc != 0
+    when: internetrc != "0"
 
   - name: Ansible remove file glob
     file:
       path: "{{ item.path }}"
       state: absent
     with_items: "{{ files_to_delete.files }}"
-    when: internet.rc|default(1) != 0 
+    when: internetrc|default(1) != "0" 
 
 - name: copy httprepo file
   template:
     src: templates/httplocal.repo.j2
     dest: /etc/yum.repos.d/httplocal.repo
-  when: internet.rc|default(1) != 0 
+  when: internetrc|default(1) != "0" 
   notify:
     - clean cache
 

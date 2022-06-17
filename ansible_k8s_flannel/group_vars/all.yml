@@ -85,7 +85,7 @@ docker:
 flannel:
   healthzPort: 8471
   type: vxlan
-  iface: eno1
+  iface: enp0s8
   hostname: "{{ hostname }}" 
   servicename: flanneld
 
@@ -107,6 +107,6 @@ cudaandfiles:
   driverrunfile: NVIDIA-Linux-x86_64-470.57.02.run
 
 nfssc:
-  nfsserver: 172.18.10.2
-  nfspath: /DATADISK/data/bjsh
+  nfsserver: 192.168.0.156 
+  nfspath: /data
  
