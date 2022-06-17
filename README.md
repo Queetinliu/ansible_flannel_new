@@ -12,3 +12,5 @@
 重启完ansible-playbook deploy.sh 部署k8s.
 
 这个安装的是docker
+
+部署时，多网卡中注意修改group_vars下的all.yml里flanneld里绑定网卡的接口，其他的可以保持默认。
