@@ -10,3 +10,5 @@
 做完修改hosts配置，运行ansible-playbook deploy.sh --tags=common做基础设置，重启重启各节点
 
 重启完ansible-playbook deploy.sh 部署k8s.
+
+这个安装的是docker
