@@ -12,3 +12,5 @@
 重启完ansible-playbook deploy.sh 部署k8s.
 
 这个安装的是docker
+
+受限于本地电脑资源，最多测试过6台虚拟机的部署。
