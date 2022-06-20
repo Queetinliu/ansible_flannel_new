@@ -242,11 +242,11 @@
 - block:
   - name: copy pause tar to host
     get_url:
-      url: "{{ httpurl }}/{{ ansible_role_name }}/pause-amd64:3.1.tar"
-      dest: "{{ k8s_dir }}/kubelet/bin/pause-amd64:3.1.tar"
+      url: "{{ httpurl }}/{{ ansible_role_name }}/pause-amd64.3.1.tar"
+      dest: "{{ k8s_dir }}/kubelet/bin/pause-amd64.3.1.tar"
   
   - name: load image
-    shell: docker load -i pause-amd64:3.1.tar
+    shell: docker load -i pause-amd64.3.1.tar && docker tag da86e6ba6ca1 mirrorgooglecontainers/pause-amd64:3.1
     args:
       chdir: "{{ k8s_dir }}/kubelet/bin/"
 
