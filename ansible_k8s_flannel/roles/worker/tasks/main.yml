@@ -141,10 +141,6 @@
   when: kubectl_exists.rc != 0
   delegate_to: "{{ groups['masters'][0] }}"
 
-- name: debug apiserver
-  debug:
-    msg: "{{apiserver}}"
-
 - name: generate flanneld kubeconfig with kubectl installed
   script: files/flannelkubeconfig.sh {{ apiserver }} {{ k8s_dir }}
   args:
