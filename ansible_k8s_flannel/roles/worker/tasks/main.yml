@@ -92,6 +92,11 @@
   changed_when: false
   register: kube_nginx_stats
 
+- name: Check if kubectl is installed
+  shell: command -v kubectl >/dev/null 2>&1
+  register: kubectl_exists
+  ignore_errors: yes
+
 - name: define kube-apiserver to first masters
   set_fact:
     apiserver: "https://{{ hostvars[groups['masters'][0]].ansible_host }}:6443"
@@ -106,38 +111,64 @@
     apiserver: "https://{{ hostvars[groups['masters'][0]].ansible_host }}:8443"
   when: kube_nginx_stats.rc !=0 and  groups['masters'] | length >=3
 
-- name: generate kubelet kubeconfig on controller node
+- name: generate kubelet kubeconfig with kubectl installed
   script: files/kubeletconfig.sh {{ k8s_dir }} {{ apiserver }} {{ token }}
   args:
     chdir: "{{ k8s_dir }}/kubelet/cfg"
     creates: "{{ k8s_dir }}/kubelet/cfg/kubelet-bootstrap.kubeconfig"
-  run_once: true
+  when: kubectl_exists.rc == 0
+
+- name: generate kubelet kubeconfig without kubectl 
+  script: files/kubeletconfig.sh {{ k8s_dir }} {{ apiserver }} {{ token }}
+  args:
+    chdir: "/tmp"
+    creates: "tmp/kubelet-bootstrap.kubeconfig"
+  when: kubectl_exists.rc != 0
   delegate_to: "{{ groups['masters'][0] }}"
 
-- name: generate kube-proxy kubeconfig on controller node
+- name: generate kube-proxy kubeconfig with kubectl installed
   script: files/kubeconfig.sh {{ k8s_dir }} {{ apiserver }} {{ token }} 
   args:
     chdir: "{{ k8s_dir }}/kube-proxy/cfg"
     creates: "{{ k8s_dir }}/kube-proxy/cfg/kube-proxy.kubeconfig"
-  run_once: true
+  when: kubectl_exists.rc == 0
+
+- name: generate kube-proxy kubeconfig without kubectl 
+  script: files/kubeconfig.sh {{ k8s_dir }} {{ apiserver }} {{ token }} 
+  args:
+    chdir: "/tmp"
+    creates: "/tmp/kube-proxy.kubeconfig"
+  when: kubectl_exists.rc != 0
   delegate_to: "{{ groups['masters'][0] }}"
 
-- name: generate flanneld kubeconfig
+- name: debug apiserver
+  debug:
+    msg: "{{apiserver}}"
+
+- name: generate flanneld kubeconfig with kubectl installed
   script: files/flannelkubeconfig.sh {{ apiserver }} {{ k8s_dir }}
   args:
     chdir: "{{ k8s_dir }}/flanneld/cfg"
     creates: "{{ k8s_dir }}/flanneld/cfg/flanneld.kubeconfig"
-  run_once: true
+  when: kubectl_exists.rc == 0
+  
+- name: generate flanneld kubeconfig without kubectl
+  script: files/flannelkubeconfig.sh {{ apiserver }} {{ k8s_dir }}
+  args:
+    chdir: "/tmp"
+    creates: "/tmp/flanneld.kubeconfig"
+  when: kubectl_exists.rc != 0
   delegate_to: "{{ groups['masters'][0] }}"
 
-- name: copy related kubeconfig 
+- name: copy related kubeconfig on without kubectl node
   copy:
-    src: "{{ k8s_dir }}/{{ item.path }}/cfg/{{ item.file }}"
+    src: "/tmp/{{ item.file }}"
     dest: "{{ k8s_dir }}/{{ item.path }}/cfg/{{ item.file }}"
   with_items:
     - { path: kubelet, file: kubelet-bootstrap.kubeconfig}
     - { path: kube-proxy, file: kube-proxy.kubeconfig}
     - { path: flanneld, file: flanneld.kubeconfig}
+  when: kubectl_exists.rc != 0
    
 - name: generate extra config for kubelet and kube-proxy
   template:
@@ -146,6 +177,14 @@
   with_items:
     - { file: kubelet-config.yaml.j2, path: kubelet }
     - { file: kube-proxy-config.yaml.j2, path: kube-proxy }
+
+- name: get the task status of docker install  async_status
+  async_status:
+    jid: "{{ dockerinstall.ansible_job_id }}"
+  register: result
+  until: result.finished
+  retries: 150
+  delay: 2
 
 - name: copy epel repo
   copy:
@@ -173,13 +212,6 @@
     name: ip_vs_rr
     state: present  
 
-- name: get the task status of docker install  async_status
-  async_status:
-    jid: "{{ dockerinstall.ansible_job_id }}"
-  register: result
-  until: result.finished
-  retries: 150
-  delay: 2
 
 - meta: flush_handlers
 

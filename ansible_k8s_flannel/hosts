@@ -19,6 +19,7 @@
 k8smaster01 ansible_host=192.168.56.10 hostname=k8smaster01 etcd_member_name=etcd01 #nodeip=1.1.1.1
 k8smaster02 ansible_host=192.168.56.11 hostname=k8smaster02 etcd_member_name=etcd02 #nodeip=1.1.1.1
 k8smaster03 ansible_host=192.168.56.12 hostname=k8smaster03 etcd_member_name=etcd03 #nodeip=1.1.1.1
+k8snode01 ansible_host=192.168.56.13 hostname=k8snode01 #nodeip=1.1.1.1
 
 # Ex 2: A collection of hosts belonging to the 'webservers' group
 [masters]
@@ -35,6 +36,7 @@ k8smaster03
 k8smaster01
 k8smaster02
 k8smaster03
+k8snode01
 
 #[gpuservers]
 #master01
