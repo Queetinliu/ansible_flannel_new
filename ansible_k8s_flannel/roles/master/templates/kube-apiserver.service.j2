@@ -41,7 +41,7 @@ ExecStart={{ k8s_dir }}/bin/kube-apiserver \
 --audit-log-maxage=30 \
 --audit-log-maxbackup=3 \
 --audit-log-maxsize=100 \
---audit-log-path={{ k8s_dir }}/logs/k8s-audit.log"
+--audit-log-path={{ k8s_dir }}/logs/k8s-audit.log
 
 Restart=on-failure
 RestartSec=10

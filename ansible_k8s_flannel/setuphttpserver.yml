@@ -1,5 +1,5 @@
 - name: check if http server exists
-  shell: ps -ef|grep SimpleHTTPServer|grep -v grep
+  shell: ps -ef|grep http.server|grep -v grep
   ignore_errors: true
   changed_when: false
   register: httpserver
@@ -7,7 +7,7 @@
   delegate_to: "{{ groups['masters'][0] }}"
 
 - name: setup a http server
-  command: python -m SimpleHTTPServer
+  command: python3 -m http.server
   async: 300
   poll: 0
   args:

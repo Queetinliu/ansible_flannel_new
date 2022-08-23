@@ -1,25 +1,6 @@
 ---
-- name: remove kernel tools
-  yum:
-    name: kernel-tools-3.10.0
-    state: absent
-
 - include_tasks: checkinternet.yml
 
-- name: install new 4.4.138 kernel without internet
-  yum:
-    name: kernel-lt-4.4.138
-    state: present
-  async: 900
-  poll: 0 
-  register: newkernel
-  when: internetrc != "0"
-
-- name: copy elrepo 
-  copy:
-    src: files/elrepo.repo
-    dest: /etc/yum.repos.d/elrepo.repo
-  when: internetrc == "0"
 
 
 #- name: install elrepo
@@ -27,15 +8,6 @@
 #    name: http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
 #    state: present
 
-- name: install lt kernel version with internet
-  yum:
-    name: kernel-lt
-    enablerepo: elrepo-kernel
-    state: present
-  async: 900
-  poll: 0 
-  register: newltkernel
-  when: internetrc == "0"
 
 - name: Set a hostname
   hostname: name={{ hostname }}
@@ -85,23 +57,7 @@
   timezone:
     name: Asia/Shanghai
 
-- name: get task status of newkernel
-  async_status:
-    jid: "{{ newkernel.ansible_job_id }}"
-  register: result
-  until: result.finished
-  delay: 5
-  retries: 50
-  when: internetrc != "0"
 
-- name: get task status of newltkernel
-  async_status:
-    jid: "{{ newltkernel.ansible_job_id }}"
-  register: result
-  until: result.finished
-  delay: 5
-  retries: 60
-  when: internetrc == "0"
 
 - name: install chrony
   yum:
@@ -114,7 +70,4 @@
     dest: /etc/chrony.conf
   notify:
     - restart chronyd
-
-- name: set to new kernel
-  shell: grub2-set-default 0
 

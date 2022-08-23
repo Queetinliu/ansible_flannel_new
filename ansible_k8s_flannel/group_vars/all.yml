@@ -80,7 +80,7 @@ kube_scheduler:
 
 docker:
   servicename: docker
-  version: 18.09.6
+  version: 19.03.15
 
 flannel:
   healthzPort: 8471

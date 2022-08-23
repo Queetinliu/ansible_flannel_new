@@ -27,15 +27,16 @@ systemctl enable httpd
 else
 set -e
  if [[ $result == "" ]];then
-   yum install -y epel-release
+   dnf install -y epel-release
    sed -e 's!^metalink=!#metalink=!g' \
        -e 's!^#baseurl=!baseurl=!g' \
        -e 's!//download\.fedoraproject\.org/pub!//mirrors.tuna.tsinghua.edu.cn!g' \
        -e 's!//download\.example/pub!//mirrors.tuna.tsinghua.edu.cn!g' \
        -e 's!http://mirrors!https://mirrors!g' \
        -i /etc/yum.repos.d/epel*.repo
-   yum install -y httpd vim sshpass ansible createrepo nfs-utils ntfs-3g ntfsprogs pciutils
+   dnf install -y httpd vim sshpass ansible createrepo nfs-utils ntfs-3g ntfsprogs pciutils
  fi
 fi
+printf "[defaults]\ninventory=$SCRIPTPATH/ansible_k8s_flannel/hosts\npipelining=True\nhost_key_checking=False\ncallback_whitelist=profile_tasks\n[persistent_connection]\ncontrol_path=%%(directory)s/%%h-%%r\ncontrol_path_dir=~/.ansible/cp" > /etc/ansible/ansible.cfg
 
-sed -i  -r -e "s@#inventory      = /etc/ansible/hosts@inventory      = $SCRIPTPATH/ansible_k8s_flannel/hosts@"  -e "s@#pipelining = False@pipelining = True@" -e "s@#host_key_checking = False@host_key_checking = False@" -e "s@#callback_whitelist = timer, mail@callback_whitelist = profile_tasks@" -e "s@#control_path_dir = ~/.ansible/cp@control_path_dir = ~/.ansible/cp@" -e "s@# control_path = %(directory)s/%%h-%%r@control_path = %(directory)s/%%h-%%r@" /etc/ansible/ansible.cfg
+#sed -i  -r -e "s@#inventory      = /etc/ansible/hosts@inventory      = $SCRIPTPATH/ansible_k8s_flannel/hosts@"  -e "s@#pipelining = False@pipelining = True@" -e "s@#host_key_checking = False@host_key_checking = False@" -e "s@#callback_whitelist = timer, mail@callback_whitelist = profile_tasks@" -e "s@#control_path_dir = ~/.ansible/cp@control_path_dir = ~/.ansible/cp@" -e "s@# control_path = %%(directory)s/%%h-%%r@control_path = %(directory)s/%%h-%%r@" /etc/ansible/ansible.cfg
